@@ -15,6 +15,12 @@
   display: flex;
 }
 
+table{
+  width: 45%;
+  outline: solid;
+  margin: 0 auto;
+}
+
 .popup {
   position: relative;
   display: inline-block;

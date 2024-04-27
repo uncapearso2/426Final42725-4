@@ -17,7 +17,9 @@
           <p [id]="guess.pid" class="letterboxparagraph"></p>
         </div>
       </div>
+      
     </div>
+    
     <div id="keyboard">
       <!-- keyboard and all the keys broken up by top, middle, and bottom -->
       <div id="topline">
@@ -110,6 +112,12 @@
           ←
         </button>
       </div>
+    </div>
+    <div id = "scoreboarddiv">
+      <p>Scoreboard</p>
+      <table>
+        <th># Guesses</th> <th>Frequency</th>
+      </table>
     </div>
     <div class="action-buttons popup">
       <button (click)="getHint()">Get Hint</button>
