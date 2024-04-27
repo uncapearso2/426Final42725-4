@@ -1,0 +1,12 @@
+p{
+  position: absolute;
+  color: black;
+}
+
+div{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
