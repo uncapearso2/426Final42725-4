@@ -5,6 +5,7 @@
   <!-- <link rel="stylesheet" type="text/css" href="Wordle.css" /> -->
 </head>
 <body>
+  <div class="entire-page">
   <div id="main">
     <div id="gamescreen" class="container">
       <div *ngFor="let guess of guesses">
@@ -113,17 +114,11 @@
         </button>
       </div>
     </div>
-    <div id = "scoreboarddiv">
-      <p>Scoreboard</p>
-      <table>
-        <th># Guesses</th> <th>Frequency</th>
-      </table>
-    </div>
     <div class="action-buttons popup">
       <button (click)="getHint()">Get Hint</button>
       <span class="popuptext" id="hintPopup">POPUP! HINT!</span>
 
-      <!-- <button (click)="reset()">Reset</button> Do we want to allow the user to reset and fetch a new word at will? -->
+    <button (click)="reset()">Reset</button>
     </div>
     <div class="winPop">
       <span class="winPopText" id="winPopup">
@@ -131,7 +126,6 @@
         <br />
         WINNER!
         <br />
-        <button class="popupButton" (click)="tryAgain()">Next Game!</button>
        
       </span>
     </div>
@@ -145,4 +139,45 @@
       <p></p>
     </div>
   </div>
+  <div id = "scoreboarddiv">
+    <p>Scoreboard</p>
+    <table>
+      <thead>
+        <tr>
+          <th># of Guesses</th>
+          <th>Frequency</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows for numbers 1 to 6 -->
+        <tr>
+          <td>1</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td></td>
+        </tr>
+        <!-- Add more rows as needed -->
+      </tbody>
+    </table>
+    
+  </div>
+</div>
 </body>

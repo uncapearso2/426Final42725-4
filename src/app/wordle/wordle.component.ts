@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import { Guess, guesses } from '../guesses';
 import { httpClientInMemBackendServiceFactory } from 'angular-in-memory-web-api';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-wordle',
@@ -15,11 +17,17 @@ Could also add keyboard functionality and allow the user to enter alpha input + 
 */
 export class WordleComponent {
   guesses = [...guesses];
-  goalword = 'HEELS'; //initial goalword - will have to be connected with backend dictionary functionality
+  goalword = 'TAKEN'; //initial goalword - will have to be connected with backend dictionary functionality
   currentguess = 1;
+  hint_count = 3;
+
+  constructor (private http: HttpClient) 
+  {}
+
   setClasses(id: string) {
+    let isEmpty = !document.getElementById(id)?.textContent;
     return {
-      empty: true,
+      empty: isEmpty,
       wrong: false,
       yellow: false,
       green: false,
@@ -42,20 +50,51 @@ export class WordleComponent {
 
   reset() {
     this.currentguess = 0;
-    // ashley you are more familiar with the CSS/html of this if you could just
-    // loop through the gameboard and reset each square
+    for (let i = 1; i <= 6; i++) { // Assuming you have 6 guesses
+      for (let j = 1; j <= 5; j++) { // Assuming you have 5 letters per guess
+        let tempid = 'g' + i + 'l' + j; // Constructing the ID of each letter box
+        let letterElement = document.getElementById(tempid); // Getting the letter box element
+        if (letterElement) {
+          letterElement.textContent  = '';
+          letterElement.classList.remove('green', 'yellow'); // Remove additional classes
+        }
+      }
+    }
+
+    //correctly resets the gameboard but then you cannot type, i think this has
+    // to do with setClasses or something, ash you may be better at debugging/doing 
+    // this function than me
   }
 
   getHint() {
-    // retrieve hint from API Call
-    // put what is returned into hint div class
     let popup = document.getElementById('hintPopup');
-    popup?.classList.toggle('show');
+
+    if (this.hint_count > 0) {
+    this.http.get<string>('/hint').subscribe((hint: string) => {
+      this.hint_count--; 
+  
+      // Put what is returned into the hint div class
+      if (popup) {
+        popup.innerHTML = hint; 
+        popup.classList.toggle('show');
+      }
+    });
+  }
+  else {
+    if (popup) {
+      popup.innerHTML = 'You have no more hints remaining.'; 
+      popup.classList.toggle('show');
+    }
+  }
   }
 
   getGoalWord() {
+    this.http.get<string>('/word').subscribe((goalword: string) => {
+      this.goalword = goalword; 
+    })
     // get word with API call
     // set this.goalword to that call
+
   }
 
   backspace() {
@@ -94,36 +133,6 @@ export class WordleComponent {
     }
     return;
 
-    // if(this.goalword[i] == letter)
-    // else if (letter && this.goalword.includes(letter)) {
-    //   wrongloc[i] = true;
-    //   // letterElement?.classList.add('yellow');
-
-    //   // if (letter_count_map['letter'] > 0) {
-    //   //   letterElement?.classList.add('yellow');
-    //   //   letter_count_map[letter]--;
-    //   // }
-    // }
-    // }
-    // for(let j = 1; j < 6; j++){
-    //   if(wrongloc[j]==true){
-    //     let tempid = 'g' + this.currentguess + 'l' + j + 'p';
-    //     let id = 'g' + this.currentguess + 'l' + j;
-    //     let letter = document.getElementById(tempid)?.textContent;
-    //     let target = this.goalword.split("").filter((ch)=> ch === letter).length;
-    //     let maxY = target - greencount;
-    //     let currentY = 0;
-    //     for(let k = 1; k < j; ++k){
-    //       let thisid = 'g' + this.currentguess + 'l' + k + 'p';
-    //       if(document.getElementById(thisid)?.textContent == letter && wrongloc[j] == true) {
-    //         currentY += 1;
-    //       }
-    //     }
-    //     if(currentY == maxY){
-    //       wrongloc[j] = true;
-    //     }
-    //   }
-    // }
   } //helper function for checking the guesses
 
   guessColor(guess: String, index: any) {
@@ -144,7 +153,7 @@ export class WordleComponent {
       ) {
         wrongWord++;
       }
-      if (i <= index) {
+      if (i <= index-1) {
         if (
           guess[i] === guess[index - 1] &&
           this.goalword[i] !== guess[index - 1]
@@ -180,33 +189,13 @@ export class WordleComponent {
     if (isSolved) {
       let popup = document.getElementById('winPopup');
       popup?.classList.toggle('show');
-      // print congratulations message
-      // Congrats, you solved the wordle in this.guesscount tries!
+      this.http.put<number>('score', this.currentguess);
+      
     } else if (this.currentguess >= 6) {
       // print you have failed wordle message
       // You failed to solve the wordle. Better luck next time!
     }
     return isSolved;
-  }
-
-  // count_letters(word: string) {
-  //   let letter_count_map: { [key: string]: number } = {};
-
-  //   for (let char of word) {
-  //     // Check if the letter_count object has the property corresponding to the current character
-  //     if (!letter_count_map.hasOwnProperty(char)) {
-  //       // If the property doesn't exist, initialize it with a count of 1
-  //       letter_count_map[char] = 1;
-  //     } else {
-  //       // If the property already exists, increment its count
-  //       letter_count_map[char]++;
-  //     }
-  //   }
-
-  //   return letter_count_map;
-  // }
-  tryAgain(){
-
   }
 
   close(){

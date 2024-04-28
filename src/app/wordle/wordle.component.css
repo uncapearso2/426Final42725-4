@@ -122,9 +122,6 @@ table{
   margin: auto; /* center each line within the keyboard*/
 }
 
-#main {
-  width: 100%;
-}
 
 p {
   text-align: center;
@@ -142,4 +139,33 @@ p {
 
 .yellow {
   background-color: yellow;
+}
+
+#scoreboarddiv {
+  position: absolute; 
+  top: 50px;
+  right: 200px;
+  
+}
+
+.action-buttons {
+  text-align: center; 
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background-color: white; /* Set background color to white */
+}
+th, td {
+  border: 1px solid #ccc; /* Set border color to grey */
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+}
+
+.entire-page {
+  padding-top: 85px;
 }
